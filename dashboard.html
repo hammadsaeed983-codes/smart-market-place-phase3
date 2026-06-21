@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MarketX Admin Dashboard — Manage products, orders and customers.">
+    <title>Dashboard | MarketX Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <!-- ── SIDEBAR ────────────────────────────────────── -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">MarketX</div>
+            <div class="sidebar-subtitle">Admin Panel</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <button class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')">
+                <span class="nav-icon">📊</span> Dashboard
+            </button>
+
+            <div class="nav-section-label">Catalog</div>
+            <button class="nav-item" id="nav-products" onclick="showSection('products')">
+                <span class="nav-icon">📦</span> Products
+            </button>
+
+            <div class="nav-section-label">Sales</div>
+            <button class="nav-item" id="nav-orders" onclick="showSection('orders')">
+                <span class="nav-icon">🛒</span> Orders
+            </button>
+            <button class="nav-item" id="nav-customers" onclick="showSection('customers')">
+                <span class="nav-icon">👥</span> Customers
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-user">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">🚪 Sign Out</button>
+        </div>
+    </aside>
+
+    <!-- ── MAIN AREA ──────────────────────────────────── -->
+    <div class="admin-main">
+
+        <!-- Topbar -->
+        <header class="admin-topbar">
+            <div class="topbar-title" id="topbarTitle">Dashboard</div>
+            <div class="topbar-actions">
+                <a href="../index.html" class="topbar-link" target="_blank">🛍️ View Store</a>
+            </div>
+        </header>
+
+        <div class="admin-content">
+
+            <!-- ═══════════════════════════════════════
+                 DASHBOARD SECTION
+            ═══════════════════════════════════════ -->
+            <section class="section-panel active" id="section-dashboard">
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">📦</div>
+                        <div>
+                            <div class="stat-value" id="stat-products">—</div>
+                            <div class="stat-label">Total Products</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🛒</div>
+                        <div>
+                            <div class="stat-value" id="stat-orders">—</div>
+                            <div class="stat-label">Total Orders</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">💰</div>
+                        <div>
+                            <div class="stat-value" id="stat-revenue">—</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber">👥</div>
+                        <div>
+                            <div class="stat-value" id="stat-customers">—</div>
+                            <div class="stat-label">Customers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="panel-header">
+                    <div class="panel-title">Recent Orders</div>
+                    <button class="btn-add" onclick="showSection('orders')" style="background:rgba(99,102,241,0.12); color:var(--primary); box-shadow:none; border:1px solid rgba(99,102,241,0.25);">
+                        View All →
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="recentOrdersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersBody">
+                            <tr><td colspan="5" class="table-loading">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════
+                 PRODUCTS SECTION
+            ═══════════════════════════════════════ -->
+            <section class="section-panel" id="section-products">
+                <div class="panel-header">
+                    <div class="panel-title">Products <span id="productCount"></span></div>
+                    <button class="btn-add" onclick="openAddProductModal()">
+                        + Add Product
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <tr><td colspan="6" class="table-loading">Loading products...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════
+                 ORDERS SECTION
+            ═══════════════════════════════════════ -->
+            <section class="section-panel" id="section-orders">
+                <div class="panel-header">
+                    <div class="panel-title">Orders <span id="orderCount"></span></div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr><td colspan="7" class="table-loading">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════
+                 CUSTOMERS SECTION
+            ═══════════════════════════════════════ -->
+            <section class="section-panel" id="section-customers">
+                <div class="panel-header">
+                    <div class="panel-title">Customers <span id="customerCount"></span></div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Orders</th>
+                                <th>Total Spent</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <tr><td colspan="6" class="table-loading">Loading customers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div><!-- /admin-content -->
+    </div><!-- /admin-main -->
+</div><!-- /admin-layout -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     PRODUCT MODAL (Add / Edit)
+════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+        <div class="modal-title" id="productModalTitle">Add New Product</div>
+        <div class="modal-form">
+            <input type="hidden" id="productModalId">
+            <div>
+                <label>Product Name *</label>
+                <input type="text" id="pName" placeholder="e.g. iPhone 15 Pro" required>
+            </div>
+            <div class="modal-form-row">
+                <div>
+                    <label>Price ($) *</label>
+                    <input type="number" id="pPrice" placeholder="999" min="0" step="0.01">
+                </div>
+                <div>
+                    <label>Stock *</label>
+                    <input type="number" id="pStock" placeholder="50" min="0">
+                </div>
+            </div>
+            <div>
+                <label>Category *</label>
+                <select id="pCategory">
+                    <option value="Phones">📱 Phones</option>
+                    <option value="Laptops">💻 Laptops</option>
+                    <option value="Accessories">🎧 Accessories</option>
+                </select>
+            </div>
+            <div>
+                <label>Image URL</label>
+                <input type="url" id="pImage" placeholder="https://...">
+            </div>
+            <div>
+                <label>Description</label>
+                <textarea id="pDescription" placeholder="Product description..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeProductModal()">Cancel</button>
+                <button class="btn-save" id="productSaveBtn" onclick="saveProduct()">💾 Save Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CONFIRM DELETE MODAL
+════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box confirm-modal">
+        <div class="confirm-icon">🗑️</div>
+        <h3 id="confirmTitle">Delete Product?</h3>
+        <p id="confirmMsg">This action cannot be undone.</p>
+        <div class="confirm-btns">
+            <button class="btn-cancel" onclick="closeConfirmModal()">Cancel</button>
+            <button class="btn-delete" id="confirmOkBtn">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     ORDER STATUS MODAL
+════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="statusModal">
+    <div class="modal-box" style="max-width:360px;">
+        <button class="modal-close" onclick="closeStatusModal()">✕</button>
+        <div class="modal-title">Update Order Status</div>
+        <div class="modal-form">
+            <input type="hidden" id="statusOrderId">
+            <div>
+                <label>Order ID</label>
+                <input type="text" id="statusOrderDisplay" disabled style="opacity:0.6;">
+            </div>
+            <div>
+                <label>New Status</label>
+                <select id="statusSelect">
+                    <option value="Processing">⏳ Processing</option>
+                    <option value="Shipped">🚚 Shipped</option>
+                    <option value="Delivered">✅ Delivered</option>
+                    <option value="Cancelled">❌ Cancelled</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeStatusModal()">Cancel</button>
+                <button class="btn-save" onclick="updateOrderStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

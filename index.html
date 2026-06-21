@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MarketX Admin Panel — Secure login for store administrators.">
+    <title>Admin Login | MarketX</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-page">
+
+<div class="login-card">
+    <div class="login-logo">
+        <span class="brand">MarketX</span>
+        <span class="sub">Admin Portal</span>
+    </div>
+
+    <h2>Welcome back 👋</h2>
+    <p class="welcome-sub">Sign in to manage your store</p>
+
+    <div class="error-banner" id="errorBanner">
+        <strong>❌ Error:</strong> <span id="errorMsg">Invalid credentials.</span>
+    </div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="admin@marketx.com"
+                value="admin@marketx.com"
+                required
+                autocomplete="email"
+            >
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="••••••••"
+                value="admin123"
+                required
+                autocomplete="current-password"
+            >
+        </div>
+        <button type="submit" class="login-btn" id="loginBtn">
+            Sign In →
+        </button>
+    </form>
+
+    <div class="hint-box">
+        Demo credentials:<br>
+        <strong>admin@marketx.com</strong> / <strong>admin123</strong>
+    </div>
+
+    <p style="text-align:center; margin-top:20px; font-size:0.82rem; color:var(--text-muted);">
+        <a href="../index.html" style="color:var(--primary); text-decoration:none;">← Back to Store</a>
+    </p>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="admin.js"></script>
+<script>
+    // If already logged in, redirect to dashboard
+    const existingToken = localStorage.getItem('adminToken');
+    if (existingToken) {
+        // Quick verify
+        fetch('http://localhost:3001/api/auth/verify', {
+            headers: { 'Authorization': 'Bearer ' + existingToken }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.valid) window.location.href = 'dashboard.html';
+        })
+        .catch(() => {});
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email    = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const btn      = document.getElementById('loginBtn');
+        const banner   = document.getElementById('errorBanner');
+
+        btn.disabled   = true;
+        btn.innerText  = 'Signing in...';
+        banner.style.display = 'none';
+
+        try {
+            const res  = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.token) {
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminUser', JSON.stringify(data.admin));
+                showToast('Login successful! Redirecting...', 'success');
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            } else {
+                document.getElementById('errorMsg').innerText = data.error || 'Invalid credentials.';
+                banner.style.display = 'block';
+                btn.disabled  = false;
+                btn.innerText = 'Sign In →';
+            }
+        } catch (err) {
+            document.getElementById('errorMsg').innerText = 'Cannot connect to server. Is it running on port 3001?';
+            banner.style.display = 'block';
+            btn.disabled  = false;
+            btn.innerText = 'Sign In →';
+        }
+    }
+</script>
+</body>
+</html>
