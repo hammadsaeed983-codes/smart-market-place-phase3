@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View product details, specifications and add to your cart on MarketX.">
+    <title>Product Details | MarketX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grid-layout">
+    <header class="navbar">
+        <div class="logo">MarketX</div>
+        <div class="nav-right">
+            <nav class="nav-links">
+                <a href="index.html">🏠 Home</a>
+                <a href="admin/index.html" class="admin-link">⚙️ Admin</a>
+            </nav>
+            <a href="cart.html" class="cart-btn">
+                🛒 Cart <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main style="padding: clamp(20px,4%,40px);">
+        <div class="product-detail-container" id="productDetailContainer">
+            <div class="product-image-wrapper">
+                <img src="" alt="Product Image" id="productImg">
+            </div>
+
+            <div class="product-info-wrapper">
+                <span class="product-category-tag" id="productCategory">Category</span>
+                <h1 id="productName" class="product-title">Loading product...</h1>
+                <div id="productPrice" class="product-price">$0.00</div>
+                <p id="productDescription" class="product-description">
+                    Experience the next generation of technology. This device features cutting-edge
+                    performance, a stunning display, and all-day battery life.
+                </p>
+                <div class="product-stock-tag" id="productStock">In Stock</div>
+                <div class="actions">
+                    <button onclick="addToCart()" class="btn-primary" id="addToCartBtn">🛒 Add to Cart</button>
+                    <button class="btn-secondary">❤️ Wishlist</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -3,120 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MarketX Admin Panel — Secure login for store administrators.">
-    <title>Admin Login | MarketX</title>
-    <link rel="stylesheet" href="admin.css">
+    <meta name="description" content="MarketX — Shop the latest premium electronics including phones, laptops, and accessories at unbeatable prices.">
+    <title>MarketX | Premium Electronics Store</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="login-page">
+<body>
 
-<div class="login-card">
-    <div class="login-logo">
-        <span class="brand">MarketX</span>
-        <span class="sub">Admin Portal</span>
-    </div>
-
-    <h2>Welcome back 👋</h2>
-    <p class="welcome-sub">Sign in to manage your store</p>
-
-    <div class="error-banner" id="errorBanner">
-        <strong>❌ Error:</strong> <span id="errorMsg">Invalid credentials.</span>
-    </div>
-
-    <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input
-                type="email"
-                id="email"
-                class="form-control"
-                placeholder="admin@marketx.com"
-                value="admin@marketx.com"
-                required
-                autocomplete="email"
-            >
+<div class="grid-layout">
+    <!-- Header -->
+    <header class="navbar">
+        <div class="logo">MarketX</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Search products..." id="search" autocomplete="off">
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input
-                type="password"
-                id="password"
-                class="form-control"
-                placeholder="••••••••"
-                value="admin123"
-                required
-                autocomplete="current-password"
-            >
+        <div class="nav-right">
+            <nav class="nav-links">
+                <a href="admin/index.html" class="admin-link" id="admin-nav-link">⚙️ Admin</a>
+            </nav>
+            <a href="cart.html" class="cart-btn" id="cart-link">
+                🛒 Cart <span class="cart-badge" id="cart-count">0</span>
+            </a>
         </div>
-        <button type="submit" class="login-btn" id="loginBtn">
-            Sign In →
-        </button>
-    </form>
+    </header>
 
-    <div class="hint-box">
-        Demo credentials:<br>
-        <strong>admin@marketx.com</strong> / <strong>admin123</strong>
-    </div>
+    <!-- Sidebar (Desktop) -->
+    <aside class="sidebar">
+        <h3>Categories</h3>
+        <nav>
+            <ul>
+                <li><a href="#" class="active sidebar-filter" data-category="All"><span class="sidebar-icon">📦</span>All Products</a></li>
+                <li><a href="#" class="sidebar-filter" data-category="Phones"><span class="sidebar-icon">📱</span>Phones</a></li>
+                <li><a href="#" class="sidebar-filter" data-category="Laptops"><span class="sidebar-icon">💻</span>Laptops</a></li>
+                <li><a href="#" class="sidebar-filter" data-category="Accessories"><span class="sidebar-icon">🎧</span>Accessories</a></li>
+            </ul>
+        </nav>
+        <div class="promo">
+            <p>Summer Sale 🔥</p>
+            <small>Up to 40% off selected items</small>
+        </div>
+    </aside>
 
-    <p style="text-align:center; margin-top:20px; font-size:0.82rem; color:var(--text-muted);">
-        <a href="../index.html" style="color:var(--primary); text-decoration:none;">← Back to Store</a>
-    </p>
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Banner -->
+        <div class="hero-banner" style="padding: 0 0 24px;">
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <h1>Next-Gen Tech,<br><span>Delivered to You</span></h1>
+                    <p>Explore the latest phones, laptops & accessories</p>
+                </div>
+                <div class="hero-badge">🔥 Summer Sale — Up to 40% Off</div>
+            </div>
+        </div>
+
+        <!-- Category Filters (mobile/tablet) -->
+        <div class="category-filters" id="categoryFilters">
+            <button class="filter-btn active" data-category="All">All</button>
+            <button class="filter-btn" data-category="Phones">📱 Phones</button>
+            <button class="filter-btn" data-category="Laptops">💻 Laptops</button>
+            <button class="filter-btn" data-category="Accessories">🎧 Accessories</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products" id="productList">
+            <!-- Skeleton placeholders while loading -->
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 MarketX. Built with ❤️ using HTML, CSS & Node.js. | <a href="admin/index.html">Admin Panel</a></p>
+    </footer>
 </div>
 
+<!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
-<script src="admin.js"></script>
-<script>
-    // If already logged in, redirect to dashboard
-    const existingToken = localStorage.getItem('adminToken');
-    if (existingToken) {
-        // Quick verify
-        fetch('http://localhost:3001/api/auth/verify', {
-            headers: { 'Authorization': 'Bearer ' + existingToken }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.valid) window.location.href = 'dashboard.html';
-        })
-        .catch(() => {});
-    }
-
-    async function handleLogin(e) {
-        e.preventDefault();
-        const email    = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const btn      = document.getElementById('loginBtn');
-        const banner   = document.getElementById('errorBanner');
-
-        btn.disabled   = true;
-        btn.innerText  = 'Signing in...';
-        banner.style.display = 'none';
-
-        try {
-            const res  = await fetch('http://localhost:3001/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-
-            if (res.ok && data.token) {
-                localStorage.setItem('adminToken', data.token);
-                localStorage.setItem('adminUser', JSON.stringify(data.admin));
-                showToast('Login successful! Redirecting...', 'success');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
-            } else {
-                document.getElementById('errorMsg').innerText = data.error || 'Invalid credentials.';
-                banner.style.display = 'block';
-                btn.disabled  = false;
-                btn.innerText = 'Sign In →';
-            }
-        } catch (err) {
-            document.getElementById('errorMsg').innerText = 'Cannot connect to server. Is it running on port 3001?';
-            banner.style.display = 'block';
-            btn.disabled  = false;
-            btn.innerText = 'Sign In →';
-        }
-    }
-</script>
+<script src="script.js"></script>
 </body>
 </html>

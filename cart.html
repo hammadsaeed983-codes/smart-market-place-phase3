@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your MarketX shopping cart — review items and proceed to checkout.">
+    <title>Shopping Cart | MarketX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grid-layout">
+    <header class="navbar">
+        <div class="logo">MarketX</div>
+        <div class="nav-right">
+            <nav class="nav-links">
+                <a href="index.html">🏠 Home</a>
+                <a href="admin/index.html" class="admin-link">⚙️ Admin</a>
+            </nav>
+            <a href="cart.html" class="cart-btn">
+                🛒 Cart <span class="cart-badge" id="cart-count">0</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="cart-main">
+        <h1>🛒 Your Shopping Cart</h1>
+
+        <div class="cart-content">
+            <div id="cartItems" class="cart-items-container">
+                <!-- Items injected here -->
+            </div>
+
+            <aside class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (5%)</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">$0.00</span>
+                </div>
+                <button class="btn-primary full-width" id="checkoutBtn" onclick="handleCheckout()">
+                    ✅ Proceed to Checkout
+                </button>
+            </aside>
+        </div>
+    </main>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Checkout Modal -->
+<div id="checkoutModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background: var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:36px; max-width:440px; width:90%; position:relative;">
+        <button onclick="closeCheckoutModal()" style="position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.3rem; cursor:pointer;">✕</button>
+        <h2 style="margin-bottom:6px; font-size:1.3rem;">Complete Your Order</h2>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:24px;">Enter your details to place the order.</p>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+            <input type="text" id="checkoutName" placeholder="Full Name" style="padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-family:inherit; font-size:0.9rem; outline:none;">
+            <input type="email" id="checkoutEmail" placeholder="Email Address" style="padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-family:inherit; font-size:0.9rem; outline:none;">
+            <input type="text" id="checkoutAddress" placeholder="Shipping Address" style="padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg-body); color:var(--text-main); font-family:inherit; font-size:0.9rem; outline:none;">
+            <button onclick="placeOrder()" class="btn-primary" style="margin-top:8px;">🚀 Place Order</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
