@@ -118,3 +118,4 @@ npm start
 ```
 - Storefront: [http://localhost:3001](http://localhost:3001)
 - Admin Panel: [http://localhost:3001/admin](http://localhost:3001/admin) (Log in with `admin@marketx.com` / `admin123`)
+ If you want to see this project working, click this link https://www.linkedin.com/posts/hammad-saeed-06091536b_webdevelopment-nodejs-mongodb-ugcPost-7475420477004492800-QaeI/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFvLTwgBZSbcu66TLI1odR8yVK9vRVblFOo to the LinkedIn post.
